@@ -7,7 +7,7 @@ import type { ThemeProps } from '../../_mixins'
 import type { ExtractPublicPropTypes, MaybeArray } from '../../_utils'
 import type { FormValidationStatus } from '../../form/src/public-types'
 import type { InputInst } from '../../input'
-import type { Size as InputSize } from '../../input/src/interface'
+import type { InputSize } from '../../input/src/public-types'
 import type {
   SelectBaseOption,
   SelectGroupOption,

@@ -6,7 +6,7 @@ import type {
   VNode
 } from 'vue'
 import type { InputInst, InputProps } from '../../input'
-import type { Size as TimePickerSize } from '../../time-picker/src/interface'
+import type { TimePickerSize } from '../../time-picker/src/public-types'
 import type {
   FormattedValue,
   OnConfirmImpl,
