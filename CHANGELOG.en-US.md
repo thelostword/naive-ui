@@ -27,6 +27,7 @@
 - `n-switch` adds `spin-props` prop.
 - `n-tree` adds `spin-props` prop.
 - `n-spin` adds `radius` and `scale` props.
+- `n-tree-select` adds `show-line` prop.
 
 ### Fixes
 
