@@ -1,6 +1,8 @@
 # CHANGELOG
 
-## NEXT_VERSION
+## 2.44.1
+
+`2026-03-08`
 
 ### Feats
 
