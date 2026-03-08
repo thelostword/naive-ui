@@ -87,6 +87,10 @@ export const selectProps = {
     default: undefined
   },
   clearable: Boolean,
+  clearCreatedOptionsOnClear: {
+    type: Boolean,
+    default: true
+  },
   clearFilterAfterSelect: {
     type: Boolean,
     default: true
@@ -742,11 +746,11 @@ export default defineComponent({
     }
     function handleClear(e: MouseEvent): void {
       e.stopPropagation()
-      const { multiple, tag, remote } = props
+      const { multiple, tag, remote, clearCreatedOptionsOnClear } = props
       if (!multiple && props.filterable) {
         closeMenu()
       }
-      if (tag && !remote) {
+      if (tag && !remote && clearCreatedOptionsOnClear) {
         createdOptionsRef.value = emptyArray
       }
       doClear()

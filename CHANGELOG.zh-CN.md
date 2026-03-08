@@ -8,10 +8,12 @@
 
 - `n-color-picker` 重构 DOM 结构和 trigger 相关的类名
 - `n-card` 中 `n-card__content` 类名改为 `n-card-content`
+- `n-select` 点击清空按钮时默认会删除通过 `tag` 属性创建的选项
 
 ### Feats
 
 - `n-color-picker` 新增 `trigger` slot，关闭 [#7192](https://github.com/tusen-ai/naive-ui/issues/7192)
+- `n-select` 新增 `clear-created-options-on-clear` 属性，用于在开启 `tag` 且可清空时控制点击清空是否同时清空通过 tag 创建的选项
 - `n-select` `n-auto-complete` `n-mention` `n-popselect` `n-cascader` `n-pagination` 新增 `scrollbar-props` 属性
 - `n-config-provider` 新增组件级 `renderEmpty` 配置（`Cascader`、`DataTable`、`Select`、`Transfer`、`Tree`、`TreeSelect`）
 - `n-config-provider` 在 `component-options` 中新增按组件配置 `size`（`Button`、`Card`、`Checkbox`、`DataTable`、`Descriptions`、`Dropdown`、`DynamicTags`、`Form`、`Input`、`Pagination`、`Popselect`、`Radio`、`Rate`、`Result`、`Skeleton`、`Space`、`Switch`、`Table`、`Tabs`、`Tag`），关闭 [#356](https://github.com/tusen-ai/naive-ui/issues/356)
