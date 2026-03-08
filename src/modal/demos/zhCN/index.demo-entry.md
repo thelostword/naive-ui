@@ -49,6 +49,7 @@ export default defineComponent({
 
 ```demo
 basic.vue
+content-scrollable.vue
 reactive.vue
 controlled.vue
 mask-closable.vue

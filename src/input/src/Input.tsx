@@ -16,9 +16,9 @@ import type { InputTheme } from '../styles'
 import type {
   InputWrappedRef,
   OnUpdateValue,
-  OnUpdateValueImpl,
-  Size
+  OnUpdateValueImpl
 } from './interface'
+import type { InputSize } from './public-types'
 import { off, on } from 'evtd'
 import { getPadding } from 'seemly'
 import { useMemo, useMergedState } from 'vooks'
@@ -76,7 +76,7 @@ export const inputProps = {
     type: Boolean as PropType<boolean | undefined>,
     default: undefined
   },
-  size: String as PropType<Size>,
+  size: String as PropType<InputSize>,
   rows: {
     type: [Number, String] as PropType<number | string>,
     default: 3

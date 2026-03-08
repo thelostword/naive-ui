@@ -1,13 +1,13 @@
 import type { TreeNode } from 'treemate'
 import type { CSSProperties, PropType, SlotsType, VNode } from 'vue'
 import type { FollowerInst, FollowerPlacement } from 'vueuc'
-import type { InternalSelectMenuRef } from '../../_internal'
+import type { InternalSelectMenuRef, ScrollbarProps } from '../../_internal'
 import type { RenderLabel } from '../../_internal/select-menu/src/interface'
 import type { ThemeProps } from '../../_mixins'
 import type { ExtractPublicPropTypes, MaybeArray } from '../../_utils'
 import type { FormValidationStatus } from '../../form/src/public-types'
 import type { InputInst } from '../../input'
-import type { Size as InputSize } from '../../input/src/interface'
+import type { InputSize } from '../../input/src/public-types'
 import type {
   SelectBaseOption,
   SelectGroupOption,
@@ -120,6 +120,7 @@ export const mentionProps = {
   >,
   onFocus: Function as PropType<(e: FocusEvent) => void>,
   onBlur: Function as PropType<(e: FocusEvent) => void>,
+  scrollbarProps: Object as PropType<ScrollbarProps>,
   // private
   internalDebug: Boolean
 } as const
@@ -518,6 +519,7 @@ export default defineComponent({
                               style={this.cssVars as any}
                               onToggle={this.handleSelect}
                               renderLabel={this.renderLabel}
+                              scrollbarProps={this.scrollbarProps}
                             >
                               {$slots}
                             </NInternalSelectMenu>

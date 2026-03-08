@@ -119,6 +119,7 @@ export const treeSelectProps = {
   loading: Boolean,
   maxTagCount: [String, Number] as PropType<number | 'responsive'>,
   multiple: Boolean,
+  showLine: Boolean,
   showPath: Boolean,
   separator: {
     type: String,
@@ -204,8 +205,12 @@ export default defineComponent({
     const triggerInstRef = ref<InternalSelectionInst | null>(null)
     const treeInstRef = ref<InternalTreeInst | null>(null)
     const menuElRef = ref<HTMLDivElement | null>(null)
-    const { mergedClsPrefixRef, namespaceRef, inlineThemeDisabled }
-      = useConfig(props)
+    const {
+      mergedClsPrefixRef,
+      namespaceRef,
+      inlineThemeDisabled,
+      mergedComponentPropsRef
+    } = useConfig(props)
     const { localeRef } = useLocale('Select')
     const {
       mergedSizeRef,
@@ -789,6 +794,9 @@ export default defineComponent({
       props,
       mergedClsPrefixRef
     )
+    const mergedRenderEmptyRef = computed(() => {
+      return mergedComponentPropsRef?.value?.TreeSelect?.renderEmpty
+    })
 
     const cssVarsRef = computed(() => {
       const {
@@ -876,6 +884,7 @@ export default defineComponent({
       handleTabOut,
       handleMenuMousedown,
       mergedTheme: themeRef,
+      mergedRenderEmpty: mergedRenderEmptyRef,
       cssVars: inlineThemeDisabled ? undefined : cssVarsRef,
       themeClass: themeClassHandle?.themeClass,
       onRender: themeClassHandle?.onRender
@@ -1020,6 +1029,7 @@ export default defineComponent({
                                 cascade={this.mergedCascade}
                                 leafOnly={this.leafOnly}
                                 multiple={this.multiple}
+                                showLine={this.showLine}
                                 renderLabel={this.renderLabel}
                                 renderPrefix={this.renderPrefix}
                                 renderSuffix={this.renderSuffix}
@@ -1042,14 +1052,18 @@ export default defineComponent({
                                   <div
                                     class={`${mergedClsPrefix}-tree-select-menu__empty`}
                                   >
-                                    {resolveSlot($slots.empty, () => [
-                                      <NEmpty
-                                        theme={mergedTheme.peers.Empty}
-                                        themeOverrides={
-                                          mergedTheme.peerOverrides.Empty
-                                        }
-                                      />
-                                    ])}
+                                    {resolveSlot($slots.empty, () => {
+                                      return [
+                                        this.mergedRenderEmpty?.() || (
+                                          <NEmpty
+                                            theme={mergedTheme.peers.Empty}
+                                            themeOverrides={
+                                              mergedTheme.peerOverrides.Empty
+                                            }
+                                          />
+                                        )
+                                      ]
+                                    })}
                                   </div>
                                 )}
                                 onLoad={this.onLoad}
