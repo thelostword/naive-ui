@@ -1,8 +1,8 @@
 # CHANGELOG
 
-## NEXT_VERSION
+## 2.44.0
 
-`NEXT_VERSION`
+`2026-03-08`
 
 ### Breaking Changes
 
