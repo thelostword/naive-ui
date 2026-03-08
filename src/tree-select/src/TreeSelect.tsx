@@ -119,6 +119,7 @@ export const treeSelectProps = {
   loading: Boolean,
   maxTagCount: [String, Number] as PropType<number | 'responsive'>,
   multiple: Boolean,
+  showLine: Boolean,
   showPath: Boolean,
   separator: {
     type: String,
@@ -1028,6 +1029,7 @@ export default defineComponent({
                                 cascade={this.mergedCascade}
                                 leafOnly={this.leafOnly}
                                 multiple={this.multiple}
+                                showLine={this.showLine}
                                 renderLabel={this.renderLabel}
                                 renderPrefix={this.renderPrefix}
                                 renderSuffix={this.renderSuffix}
