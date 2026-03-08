@@ -1115,6 +1115,7 @@ export default defineComponent({
         ref="wrapperElRef"
         class={[
           `${mergedClsPrefix}-input`,
+          `${mergedClsPrefix}-input--${this.mergedSize}-size`,
           themeClass,
           mergedStatus && `${mergedClsPrefix}-input--${mergedStatus}-status`,
           {

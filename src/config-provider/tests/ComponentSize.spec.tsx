@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { h } from 'vue'
+import { h, nextTick } from 'vue'
 import { NAutoComplete } from '../../auto-complete'
 import { NButton } from '../../button'
 import { NCard } from '../../card'
@@ -138,18 +138,30 @@ describe('n-config-provider componentOptions', () => {
     testGlobalSize(NDescriptions, 'Descriptions', '.n-descriptions', SML)
   })
 
-  it('should work with Dropdown global size', () => {
-    SML.forEach((size) => {
-      const globalWrapper = mountWithConfig(
-        NDropdown,
-        'Dropdown',
-        { size },
-        { options: [] },
-        { default: () => h('button', 'trigger') }
-      )
-      expect(globalWrapper.find('button').exists()).toBe(true)
-      globalWrapper.unmount()
-    })
+  it('should work with Dropdown global size', async () => {
+    const dropdownOptions = [
+      { label: 'opt1', key: '1' },
+      { label: 'opt2', key: '2' }
+    ]
+    for (const size of SML) {
+      const wrapper = mount(NConfigProvider, {
+        attachTo: document.body,
+        props: { componentOptions: { Dropdown: { size } } },
+        slots: {
+          default: () =>
+            h(
+              NDropdown,
+              { trigger: 'click', options: dropdownOptions },
+              { default: () => h('button', { class: 'dd-trigger' }, 'trigger') }
+            )
+        }
+      })
+      await wrapper.find('.dd-trigger').trigger('click')
+      await nextTick()
+      const menu = document.querySelector('.n-dropdown')
+      expect(menu?.classList.contains(`n-dropdown--${size}-size`)).toBe(true)
+      wrapper.unmount()
+    }
   })
 
   it('should work with DynamicTags global size', () => {
@@ -217,18 +229,34 @@ describe('n-config-provider componentOptions', () => {
     })
   })
 
-  it('should work with Popselect global size', () => {
-    SML.forEach((size) => {
-      const globalWrapper = mountWithConfig(
-        NPopselect,
-        'Popselect',
-        { size },
-        { options: [] },
-        { default: () => h('button', 'trigger') }
+  it('should work with Popselect global size', async () => {
+    const psOptions = [
+      { label: 'opt1', value: '1' },
+      { label: 'opt2', value: '2' }
+    ]
+    for (const size of SML) {
+      const wrapper = mount(NConfigProvider, {
+        attachTo: document.body,
+        props: { componentOptions: { Popselect: { size } } },
+        slots: {
+          default: () =>
+            h(
+              NPopselect,
+              { trigger: 'click', options: psOptions },
+              {
+                default: () => h('button', { class: 'ps-trigger' }, 'trigger')
+              }
+            )
+        }
+      })
+      await wrapper.find('.ps-trigger').trigger('click')
+      await nextTick()
+      const menu = document.querySelector('.n-base-select-menu')
+      expect(menu?.classList.contains(`n-base-select-menu--${size}-size`)).toBe(
+        true
       )
-      expect(globalWrapper.find('button').exists()).toBe(true)
-      globalWrapper.unmount()
-    })
+      wrapper.unmount()
+    }
   })
 
   it('should work with Radio global size', () => {
@@ -307,19 +335,26 @@ describe('n-config-provider componentOptions', () => {
 
   // ---- Non-size configs ----
 
-  it('should work with DatePicker global timePickerSize', () => {
-    SML.forEach((size) => {
-      const globalWrapper = mountWithConfig(
-        NDatePicker,
-        'DatePicker',
-        { timePickerSize: size },
-        { type: 'datetime' }
-      )
-      const propWrapper = mountDirect(NDatePicker, { type: 'datetime' })
-      expect(globalWrapper.html()).not.toBe('')
-      globalWrapper.unmount()
-      propWrapper.unmount()
-    })
+  it('should work with DatePicker global timePickerSize', async () => {
+    for (const size of SML) {
+      const wrapper = mount(NConfigProvider, {
+        attachTo: document.body,
+        props: {
+          componentOptions: { DatePicker: { timePickerSize: size } }
+        },
+        slots: {
+          default: () => h(NDatePicker, { type: 'datetime' })
+        }
+      })
+      await wrapper.find('.n-input').trigger('click')
+      await nextTick()
+      const panel = document.querySelector('.n-date-panel')
+      expect(panel).not.toBeNull()
+      const tpInput = panel?.querySelector('.n-time-picker .n-input')
+      expect(tpInput).not.toBeNull()
+      expect(tpInput?.classList.contains(`n-input--${size}-size`)).toBe(true)
+      wrapper.unmount()
+    }
   })
 
   it('should work with Dialog global iconPlacement', () => {
@@ -342,14 +377,22 @@ describe('n-config-provider componentOptions', () => {
   })
 
   it('should work with DynamicInput global buttonSize', () => {
-    const wrapper = mountWithConfig(
-      NDynamicInput,
-      'DynamicInput',
-      { buttonSize: 'small' },
-      { defaultValue: [1] }
-    )
-    expect(wrapper.find('.n-dynamic-input').exists()).toBe(true)
-    wrapper.unmount()
+    SML.forEach((size) => {
+      const globalWrapper = mountWithConfig(
+        NDynamicInput,
+        'DynamicInput',
+        { buttonSize: size },
+        { defaultValue: ['a'] }
+      )
+      const buttons = globalWrapper.findAll(
+        '.n-dynamic-input-item__action button'
+      )
+      expect(buttons.length).toBeGreaterThan(0)
+      buttons.forEach((btn) => {
+        expect(btn.classes()).toContain(`n-button--${size}-type`)
+      })
+      globalWrapper.unmount()
+    })
   })
 
   it('should work with Empty global description', () => {
@@ -384,22 +427,53 @@ describe('n-config-provider componentOptions', () => {
     wrapper.unmount()
   })
 
-  it('should work with Cascader global renderEmpty', () => {
-    const wrapper = mountWithConfig(
-      NCascader,
-      'Cascader',
-      { renderEmpty: () => h('div', { class: 'custom-empty' }, 'no data') },
-      { options: [] }
+  it('should work with Cascader global renderEmpty', async () => {
+    const wrapper = mount(NConfigProvider, {
+      attachTo: document.body,
+      props: {
+        componentOptions: {
+          Cascader: {
+            renderEmpty: () =>
+              h('div', { class: 'cascader-custom-empty' }, 'no data')
+          }
+        }
+      },
+      slots: {
+        default: () => h(NCascader, { options: [] })
+      }
+    })
+    await wrapper.find('.n-base-selection').trigger('click')
+    await nextTick()
+    const menu = document.querySelector('.n-cascader-menu')
+    expect(menu).not.toBeNull()
+    expect(menu?.querySelector('.cascader-custom-empty')?.textContent).toBe(
+      'no data'
     )
-    expect(wrapper.html()).not.toBe('')
     wrapper.unmount()
   })
 
-  it('should work with Select global renderEmpty', () => {
-    const wrapper = mountWithConfig(NSelect, 'Select', {
-      renderEmpty: () => h('div', { class: 'custom-empty' }, 'no data')
+  it('should work with Select global renderEmpty', async () => {
+    const wrapper = mount(NConfigProvider, {
+      attachTo: document.body,
+      props: {
+        componentOptions: {
+          Select: {
+            renderEmpty: () =>
+              h('div', { class: 'select-custom-empty' }, 'no data')
+          }
+        }
+      },
+      slots: {
+        default: () => h(NSelect, { options: [] })
+      }
     })
-    expect(wrapper.html()).not.toBe('')
+    await wrapper.find('.n-base-selection').trigger('click')
+    await nextTick()
+    const menu = document.querySelector('.n-base-select-menu')
+    expect(menu).not.toBeNull()
+    expect(menu?.querySelector('.select-custom-empty')?.textContent).toBe(
+      'no data'
+    )
     wrapper.unmount()
   })
 
@@ -418,10 +492,15 @@ describe('n-config-provider componentOptions', () => {
     const wrapper = mountWithConfig(
       NTransfer,
       'Transfer',
-      { renderEmpty: () => h('div', { class: 'custom-empty' }, 'no data') },
+      {
+        renderEmpty: () =>
+          h('div', { class: 'transfer-custom-empty' }, 'no data')
+      },
       { options: [] }
     )
-    expect(wrapper.html()).not.toBe('')
+    const empties = wrapper.findAll('.transfer-custom-empty')
+    expect(empties.length).toBeGreaterThan(0)
+    expect(empties[0].text()).toBe('no data')
     wrapper.unmount()
   })
 
@@ -433,14 +512,28 @@ describe('n-config-provider componentOptions', () => {
     wrapper.unmount()
   })
 
-  it('should work with TreeSelect global renderEmpty', () => {
-    const wrapper = mountWithConfig(
-      NTreeSelect,
-      'TreeSelect',
-      { renderEmpty: () => h('div', { class: 'custom-empty' }, 'no data') },
-      { options: [] }
+  it('should work with TreeSelect global renderEmpty', async () => {
+    const wrapper = mount(NConfigProvider, {
+      attachTo: document.body,
+      props: {
+        componentOptions: {
+          TreeSelect: {
+            renderEmpty: () =>
+              h('div', { class: 'treeselect-custom-empty' }, 'no data')
+          }
+        }
+      },
+      slots: {
+        default: () => h(NTreeSelect, { options: [] })
+      }
+    })
+    await wrapper.find('.n-base-selection').trigger('click')
+    await nextTick()
+    const menu = document.querySelector('.n-tree-select-menu')
+    expect(menu).not.toBeNull()
+    expect(menu?.querySelector('.treeselect-custom-empty')?.textContent).toBe(
+      'no data'
     )
-    expect(wrapper.html()).not.toBe('')
     wrapper.unmount()
   })
 
